@@ -8,7 +8,7 @@ export const SAVE_VERSION = 3;
  * menambah karakter berikutnya cukup menambah satu baris di sini.
  */
 export const AVATARS = [
-  { id: 'player_m', label: 'Arya' },
+  { id: 'player_m', label: 'Kirito' },
   { id: 'player_f', label: 'Laras' },
   { id: 'player_m2', label: 'Damar' },
   { id: 'player_f2', label: 'Nadia' },
