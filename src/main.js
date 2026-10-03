@@ -78,7 +78,7 @@ async function boot() {
   await document.fonts.ready;
   await loadAssets('assets/', (p) => { loadingEl.textContent = `Memuat aset ${Math.round(p * 100)}%`; });
   const [items, crops, npcData, shops, fish] = await Promise.all(
-    ['items', 'crops', 'npcs', 'shops', 'fish'].map((f) => fetch(`src/data/${f}.json`).then((r) => r.json())),
+    ['items', 'crops', 'npcs', 'shops', 'fish'].map((f) => fetch(`src/data/${f}.json?v=2`).then((r) => r.json())),
   );
   setItemData(items);
   state.shops = shops;
