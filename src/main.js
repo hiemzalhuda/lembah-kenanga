@@ -1,6 +1,6 @@
 // Game bootstrap and main loop.
 import { loadAssets, sprite, assets } from './render/assets.js';
-import { Renderer, view } from './render/renderer.js';
+import { Renderer, view, drawFrame } from './render/renderer.js';
 import { Camera } from './render/camera.js';
 import { startLoop } from './core/loop.js';
 import { input, mouse, bindMouse } from './core/input.js';
@@ -120,6 +120,7 @@ async function boot() {
   if (!fresh && save?.player) Object.assign(state.player, save.player);
   else {
     state.inv.add('hoe'); state.inv.add('axe'); state.inv.add('pickaxe'); state.inv.add('scythe');
+    state.inv.add('sword');
     state.inv.slots[4] = { id: 'watering_can', count: 1, water: 40 };
     state.inv.add('seed_turnip', 15);
     state.weather.roll(state.time.season);
@@ -573,6 +574,15 @@ function useHeld() {
       }
       return true;
     }
+    case 'sword': {
+      // Tebasan Ganda: animasi skill overlay di posisi pemain
+      if (spend(toolCost(d))) {
+        state.skillFx = { t: 0, dur: 0.45 };
+        state.audio.slash();
+        state.juice.hit('small');
+      }
+      return true;
+    }
     default: return false;
   }
 }
@@ -867,6 +877,10 @@ function applySchedules() {
 function update(dt) {
   const { player, map, time, dialog, invUI, chestUI } = state;
   state.juice.update(dt);
+  if (state.skillFx) {
+    state.skillFx.t += dt;
+    if (state.skillFx.t >= state.skillFx.dur) state.skillFx = null;
+  }
   if (state.juice.stop > 0) { input.endFrame(); return; }   // brief freeze on impact
 
   state.chatUI?.update(dt);
@@ -1158,6 +1172,21 @@ function drawAnimatedTerrain(cx, cy, season, now) {
   }
 }
 
+/** Overlay animasi skill Tebasan Ganda di posisi pemain. */
+function drawSkillFx(ctx, cx, cy) {
+  const fx = state.skillFx;
+  if (!fx) return;
+  const { def, img } = sprite('skill_tebasan');
+  if (!def || !img) return;
+  const n = def.cols || 3;
+  const k = Math.min(n - 1, Math.floor((fx.t / fx.dur) * n));
+  const p = state.player;
+  const step = 12;
+  const ox = p.dir === 'left' ? -step : p.dir === 'right' ? step : 0;
+  const oy = p.dir === 'up' ? -step : p.dir === 'down' ? step : 0;
+  drawFrame(ctx, img, def.frame[0], def.frame[1], k, 0, p.x - cx + ox, p.y - cy + oy);
+}
+
 function render() {
   const { map, player, time, camera, inv, invUI, chestUI, weather } = state;
   const now = performance.now() / 1000;
@@ -1192,7 +1221,11 @@ function render() {
 
   for (const d of drawables) {
     if (d.critter) { drawCritter(ctx, d.critter, cx, cy); continue; }
-    if (d instanceof Character || d instanceof Animal) { d.draw(ctx, cx, cy); continue; }
+    if (d instanceof Character || d instanceof Animal) {
+      if (d === player && state.skillFx) drawSkillFx(ctx, cx, cy);
+      else d.draw(ctx, cx, cy);
+      continue;
+    }
     if (d.isCrop) {
       const def = state.farming.crops[d.soil.crop];
       const sp = assets.manifest.sprites[def.sprite];

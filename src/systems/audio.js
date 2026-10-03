@@ -342,6 +342,12 @@ export class AudioSystem {
     const t = this.now(); if (t === null) return;
     this.noiseHit(t, 0.16, 0.16, 3200, 'bandpass');
   }
+
+  slash() {
+    const t = this.now(); if (t === null) return;
+    this.noiseHit(t, 0.18, 0.2, 4200, 'bandpass');
+    this.tone(t, 880, 180, 0.14, 0.1, 'sawtooth');
+  }
 }
 
 function clamp01(v) { return Math.max(0, Math.min(1, Math.round(v * 100) / 100)); }

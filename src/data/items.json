@@ -40,6 +40,14 @@
     "energy": 1,
     "stack": 1
   },
+  "sword": {
+    "name": "Pedang",
+    "sheet": "items_tools",
+    "i": 16,
+    "tool": "sword",
+    "energy": 3,
+    "stack": 1
+  },
   "fishing_rod": {
     "name": "Pancing",
     "sheet": "items_tools",
