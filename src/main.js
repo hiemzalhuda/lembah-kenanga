@@ -6,7 +6,7 @@ import { startLoop } from './core/loop.js';
 import { input, mouse, bindMouse } from './core/input.js';
 import { on } from './core/events.js';
 import { GameTime, SEASON_NAMES } from './core/time.js';
-import { readSave, writeSave, takeNewGame, readProfile, writeProfile, avatarOf } from './core/save.js?v=4';
+import { readSave, writeSave, takeNewGame, readProfile, writeProfile, avatarOf } from './core/save.js?v=5';
 import { push as pushSave } from './core/account.js';
 import { getArea, markRemoved, removalsToJSON, removalsFromJSON } from './world/areas.js';
 import { TILE } from './world/map.js';
