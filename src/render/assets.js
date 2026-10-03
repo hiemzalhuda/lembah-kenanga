@@ -11,12 +11,13 @@ function loadImage(src) {
 }
 
 export async function loadAssets(base = 'assets/', onProgress = () => {}) {
-  const res = await fetch(base + 'manifest.json?v=2');
+  const res = await fetch(base + 'manifest.json?v=3');
   assets.manifest = await res.json();
   const entries = Object.entries(assets.manifest.sprites);
   let done = 0;
   await Promise.all(entries.map(async ([name, def]) => {
-    assets.images.set(name, await loadImage(base + def.file));
+    // Cache-busting utk PNG sprite (v3 = walk cycle Kirito baru)
+    assets.images.set(name, await loadImage(base + def.file + '?v=3'));
     onProgress(++done / entries.length);
   }));
   return assets;
