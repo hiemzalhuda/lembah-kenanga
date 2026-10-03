@@ -11,7 +11,7 @@ function loadImage(src) {
 }
 
 export async function loadAssets(base = 'assets/', onProgress = () => {}) {
-  const res = await fetch(base + 'manifest.json');
+  const res = await fetch(base + 'manifest.json?v=2');
   assets.manifest = await res.json();
   const entries = Object.entries(assets.manifest.sprites);
   let done = 0;
