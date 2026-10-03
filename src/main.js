@@ -120,8 +120,8 @@ async function boot() {
   if (!fresh && save?.player) Object.assign(state.player, save.player);
   else {
     state.inv.add('hoe'); state.inv.add('axe'); state.inv.add('pickaxe'); state.inv.add('scythe');
-    state.inv.add('sword');
     state.inv.slots[4] = { id: 'watering_can', count: 1, water: 40 };
+    state.inv.add('sword');
     state.inv.add('seed_turnip', 15);
     state.weather.roll(state.time.season);
   }
