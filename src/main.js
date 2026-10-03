@@ -126,6 +126,12 @@ async function boot() {
     state.weather.roll(state.time.season);
   }
 
+  // Jaminan: Pedang (tool baru) harus ada — untuk save lama yang luput migrasi.
+  if (!state.inv.slots.some((s) => s?.id === 'sword')) {
+    const empty = state.inv.slots.findIndex((s) => !s);
+    if (empty >= 0) state.inv.slots[empty] = { id: 'sword', count: 1 };
+  }
+
   // Public chat. The name and avatar are the ones chosen on the homepage, so
   // other players see the same farmer they meet in the valley.
   state.chat = new Chat({
