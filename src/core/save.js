@@ -1,6 +1,6 @@
 // Versioned JSON saves in localStorage. Keeps a .bak of the previous write so a
 // bad write can be recovered. Migrations run in order v -> v+1.
-export const SAVE_VERSION = 3;
+export const SAVE_VERSION = 4;
 
 /**
  * Karakter yang bisa dipilih pemain. Satu daftar dipakai homepage (kartu
@@ -54,6 +54,15 @@ const MIGRATIONS = {
     d.removals = {};
     delete d.player?.x;
     delete d.player?.y;
+    return d;
+  },
+  // v4 memberi Pedang ke pemain lama (tool baru + skill Tebasan Ganda).
+  3: (d) => {
+    const slots = d.inv?.slots;
+    if (Array.isArray(slots) && !slots.some((s) => s?.id === 'sword')) {
+      const empty = slots.findIndex((s) => !s);
+      if (empty >= 0) slots[empty] = { id: 'sword', count: 1 };
+    }
     return d;
   },
 };
